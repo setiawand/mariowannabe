@@ -43,7 +43,7 @@ function createTextureLayer(texture, width, height, yPos, depth, speedFactor, re
   const mesh = new THREE.Mesh(geo, mat);
   mesh.position.set(0, yPos, depth);
   scene.add(mesh);
-  bgLayers.push({ mesh, speedFactor });
+  bgLayers.push({ mesh, speedFactor, width, repeatX });
 }
 
 // — 1) Load semua texture dulu —
@@ -133,8 +133,10 @@ function animate() {
   if (gameOver) return;
 
   // — PARALLAX BACKGROUND UPDATE —
-  bgLayers.forEach(({ mesh, speedFactor }) => {
+  bgLayers.forEach(({ mesh, speedFactor, width, repeatX }) => {
     mesh.position.x = camera.position.x * speedFactor;
+    const scrollW = width / repeatX;
+    mesh.material.map.offset.x = (camera.position.x * speedFactor) / scrollW;
   });
 
   // — HORIZONTAL MOVE & SIDE COLLISION —
